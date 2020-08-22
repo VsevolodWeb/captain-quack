@@ -1,23 +1,24 @@
 import {Dispatch} from 'redux'
+import shortId from 'shortid'
 import {InferActionsTypes} from './store'
 import {api} from '../api/cars-api'
 
 
 export type CarType = {
-    id: number
+    id: string | number
     title: string
     description: string
-    year: number
+    year: number | ''
     color: string
     status: string
-    price: number
+    price: number | ''
 }
 export type StatusType = {
     [key: string]: string
 }
 type InitialStateType = {
     list: CarType[]
-    colors: string[]
+    colors: Set<string>
     statuses: StatusType
 }
 type ActionsTypes = InferActionsTypes<typeof actions>
@@ -25,7 +26,7 @@ type ActionsTypes = InferActionsTypes<typeof actions>
 
 const initialState: InitialStateType = {
     list: [],
-    colors: [],
+    colors: new Set<string>(),
     statuses: {
         pednding: 'В ожидании',
         out_of_stock: 'Нет в наличии',
@@ -40,10 +41,19 @@ const carsReducer = (state = initialState, action: ActionsTypes): InitialStateTy
         }
 
         case 'cars/SET_COLORS': {
+
             return {...state, colors: action.colors}
         }
 
-         case 'cars/REMOVE_CAR': {
+        case 'cars/ADDING_CAR': {
+            const list = state.list.map(item => Object.assign({}, item))
+
+            list.push({...action.car, id: shortId.generate()})
+
+            return {...state, list}
+        }
+
+        case 'cars/REMOVE_CAR': {
             return {...state, list: state.list.filter(item => item.id !== action.id)}
         }
 
@@ -55,8 +65,9 @@ const carsReducer = (state = initialState, action: ActionsTypes): InitialStateTy
 
 export const actions = {
     setCars: (cars: CarType[]) => ({type: 'cars/SET_CARS', cars} as const),
-    removeCar: (id: number) => ({type: 'cars/REMOVE_CAR', id} as const),
-    setColors: (colors: string[]) => ({type: 'cars/SET_COLORS', colors} as const)
+    addingCar: (car: CarType) => ({type: 'cars/ADDING_CAR', car} as const),
+    removeCar: (id: number | string) => ({type: 'cars/REMOVE_CAR', id} as const),
+    setColors: (colors: Set<string>) => ({type: 'cars/SET_COLORS', colors} as const)
 }
 
 export const getCarsThunkCreator = () => async (dispatch: Dispatch<ActionsTypes>) => {
@@ -64,15 +75,12 @@ export const getCarsThunkCreator = () => async (dispatch: Dispatch<ActionsTypes>
         const response = await api.getCars()
 
         dispatch(actions.setCars(response))
-        dispatch(actions.setColors(response.map(item => item.color)))
-    } catch (e) {
-        console.log(e)
-    }
-}
 
-export const addingCarThunkCreator = () => async (dispatch: Dispatch<ActionsTypes>) => {
-    try {
-        //dispatch(actions.setColors(response.map(item => item.color)))
+        const colors = new Set<string>()
+        response.forEach(item => {
+            colors.add(item.color)
+        })
+        dispatch(actions.setColors(colors))
     } catch (e) {
         console.log(e)
     }

@@ -1,0 +1,43 @@
+@import "src/styles/abstracts/mixins";
+
+.table {
+	@include respond-above(sm) {
+		&__row {
+			grid-template-columns: 6fr 1fr 1fr 2fr 2fr 2fr;
+			grid-template-areas: 'title title title title title title year color status status price price price button button';
+		}
+	}
+
+	@include respond-below(sm) {
+		&__row {
+			grid-template-areas: 'title title title  title' 'color price price  price' 'year status button button'
+		}
+
+		&__cell {
+			&_title {
+				grid-area: title
+			}
+
+			&_year {
+				grid-area: year
+			}
+
+			&_color {
+				grid-area: color
+			}
+
+			&_status {
+				grid-area: status
+			}
+
+			&_price {
+				grid-area: price
+			}
+
+			&_button {
+				grid-area: button;
+				text-align: right;
+			}
+		}
+	}
+}

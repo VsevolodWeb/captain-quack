@@ -1,36 +1,86 @@
+@import 'src/styles/components/formTextElement';
+@import "src/styles/abstracts/mixins";
+
 .form {
-  display: grid;
-  grid-template-areas: 'name   year  price'
-                       'text   text   text'
-                       'color status button';
+	display: grid;
+	align-items: center;
+	grid-column-gap: 20px;
+	grid-row-gap: 40px;
+	margin-bottom: 50px;
 
-  &__item {
-    &_name {
-      grid-area: name;
-    }
+	@include respond-above(sm) {
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		grid-template-areas:
+				'name   year  price'
+				'text   text   text'
+				'color status button';
+	}
 
-    &_year {
-      grid-area: year;
-    }
+	@include respond-below(sm) {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		grid-template-areas:
+				'name name'
+				'price year'
+				'text text'
+				'color color'
+				'status button';
+	}
 
-    &_price {
-      grid-area: price;
-    }
+	&__item {
+		&_name {
+			grid-area: name;
+		}
 
-    &_text {
-      grid-area: text;
-    }
+		&_year {
+			grid-area: year;
+		}
 
-    &_color {
-      grid-area: color;
-    }
+		&_price {
+			grid-area: price;
+		}
 
-    &_status {
-      grid-area: status;
-    }
+		&_text {
+			grid-area: text;
+		}
 
-    &_button {
-      grid-area: button;
-    }
-  }
+		&_color {
+			grid-area: color;
+		}
+
+		&_status {
+			grid-area: status;
+		}
+
+		&_button {
+			grid-area: button;
+		}
+	}
+}
+
+.radioWrapper {
+	display: flex;
+	align-items: center;
+	margin-left: $formTextElementPadding;
+}
+
+.radio {
+	display: none;
+
+	&__item:not(:last-child) {
+		margin-right: 20px
+	}
+
+	&__label {
+		display: block;
+		border: 2px solid transparent
+	}
+
+	&:checked + &__label {
+		border-color: #c4092f;
+		border-radius: 50%;
+	}
+}
+
+.button {
+	width: 100%;
 }

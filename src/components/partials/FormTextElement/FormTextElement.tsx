@@ -4,20 +4,27 @@ import {Field} from 'formik'
 
 type PropsType = {
     className: string[]
+    type?: string
     name: string
-    placeholder: string
+    title: string
+    value: string
     errors?: string
-    touched?: string
+    touched?: boolean
 }
 
 const FormTextElement: React.FC<PropsType> = (
-    {className, name, placeholder, errors, touched}
+    {className, type, name, title, value, errors, touched}
 ) => {
     return (
-        <div className={cn('formElement', className)}>
-            <Field name={name} className="formElement__element" placeholder={placeholder}/>
+        <div className={cn('formTextElement', className)}>
+            {value ? <label htmlFor={name} className='formTextElement__label'>{title}</label> : null}
+            <Field type={type || 'text'}
+                   name={name}
+                   id={name}
+                   className="formTextElement__element"
+                   placeholder={title}/>
             {errors && touched ? (
-                <div className="formElement__hint">{errors}</div>
+                <div className="formTextElement__hint">{errors}</div>
             ) : null}
         </div>
     )

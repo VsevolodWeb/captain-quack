@@ -1,5 +1,8 @@
+@import "src/styles/abstracts/mixins"
+
+
 .header
-	background-color: var(--body-font-color)
+	background-color: var(--common-color)
 	text-align: center
 	
 .logo
@@ -13,6 +16,13 @@
 		size: 42px
 		weight: bold
 	text-align: center
-	margin:
-		top: 60px
-		bottom: 60px
+	
+	@include respond-above(sm)
+		margin:
+			top: 60px
+			bottom: 60px
+			
+	@include respond-below(sm)
+		margin:
+			top: 16px
+			bottom: 16px

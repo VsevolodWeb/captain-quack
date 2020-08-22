@@ -4,15 +4,16 @@ import cn from 'classnames'
 import {AppStateType} from '../../../store/store'
 import {actions, CarType, getCarsThunkCreator, StatusType} from '../../../store/cars-reducer'
 import AddingCar from './AddingCar/AddingCar'
-import s from './Cars.module.sass'
+import s from './Cars.module.scss'
 import Color from '../../partials/Color/Color'
 
 type PropsType = {
     cars: CarType[]
-    colors: string[]
+    colors: Set<string>
     statuses: StatusType
     getCars: () => void
-    removeCar: (id: number) => void
+    addingCar: (car: CarType) => void
+    removeCar: (id: number | string) => void
 }
 
 const Cars: React.FC<PropsType> = props => {
@@ -22,16 +23,16 @@ const Cars: React.FC<PropsType> = props => {
         getCars()
     }, [getCars])
 
-    const removeCar = (id: number) => {
+    const removeCar = (id: number | string) => {
         props.removeCar(id)
     }
 
     return <>
-        <AddingCar/>
+        <AddingCar colors={props.colors} statuses={props.statuses} addingCar={props.addingCar}/>
         <div className="cars">
-            <h1 className="title">Автомобили в наличии</h1>
+            <h1 className="title title_lg">Автомобили в наличии</h1>
             <div className="table cars__table">
-                <div className={cn('table__header', 'table__row', s.table__row)}>
+                <div className={cn(s.table__row, 'table__header', 'table__row')}>
                     <div className="table__cell">Название</div>
                     <div className="table__cell">Год</div>
                     <div className="table__cell">Цвет</div>
@@ -42,20 +43,28 @@ const Cars: React.FC<PropsType> = props => {
 
                 {props.cars.map(item => (
                     <div className={cn('table__row', s.table__row)} key={item.id}>
-                        <div className="table__cell">
+                        <div className={cn('table__cell', s.table__cell_title)}>
                             {item.title}
                             <div className="table__hint">
                                 {item.description}
                             </div>
                         </div>
-                        <div className="table__cell">{item.year}</div>
-                        <div className="table__cell">
+                        <div className={cn('table__cell', s.table__cell_year)}>{item.year}</div>
+                        <div className={cn('table__cell', s.table__cell_color)}>
                             <Color color={item.color}/>
                         </div>
-                        <div className="table__cell">{props.statuses[item.status] || '—'}</div>
-                        <div className="table__cell">{Intl.NumberFormat('Ru-ru', { style: 'currency', currency: 'RUB'}).format(item.price).replace(/\D00(?=\D*$)/, '')}</div>
-                        <div className="table__cell">
-                            <button onClick={() => removeCar(item.id)}>Удалить</button>
+                        <div
+                            className={cn('table__cell', s.table__cell_status)}>
+                            {props.statuses[item.status] || '—'}
+                        </div>
+                        <div className={cn('table__cell', s.table__cell_price)}>
+                            {Intl.NumberFormat('Ru-ru', {
+                                style: 'currency',
+                                currency: 'RUB'
+                            }).format(+item.price).replace(/\D00(?=\D*$)/, '')}</div>
+                        <div className={cn('table__cell', s.table__cell_button)}>
+                            <button onClick={() => removeCar(item.id)} className="button button_secondary">Удалить
+                            </button>
                         </div>
                     </div>
                 ))}
@@ -70,4 +79,11 @@ const mapStateToProps = (state: AppStateType) => ({
     statuses: state.cars.statuses
 })
 
-export default connect(mapStateToProps, {getCars: getCarsThunkCreator, removeCar: actions.removeCar})(Cars)
+export default connect(
+    mapStateToProps,
+    {
+        getCars: getCarsThunkCreator,
+        addingCar: actions.addingCar,
+        removeCar: actions.removeCar
+    }
+)(Cars)

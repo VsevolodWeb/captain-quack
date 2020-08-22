@@ -1,0 +1,31 @@
+$formTextElementPadding: 10px
+
+.formTextElement
+	position: relative
+
+	&__element
+		border:
+			style: solid
+			color: #dcdcdc
+			width: 1px
+		border-bottom-width: 2px
+		height: 40px
+		font-size: 12px
+		padding: $formTextElementPadding
+		width: 100%
+		
+		&:focus
+			border-bottom-color: var(--accent-color)
+			
+	&__hint, &__label
+		position: absolute
+		font-size: 12px
+		margin-left: $formTextElementPadding
+
+	&__hint
+		top: 100%
+		color: var(--accent-color)
+		
+	&__label
+		bottom: calc(100% + 2px)
+		color: var(--secondary-color)

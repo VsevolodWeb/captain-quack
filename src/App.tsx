@@ -12,7 +12,9 @@ const App = () => (
     <Provider store={store}>
         <Header/>
         <div className="container">
-            <Cars/>
+            <div className="content">
+                <Cars/>
+            </div>
         </div>
         <Footer/>
     </Provider>

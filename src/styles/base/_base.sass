@@ -1,13 +1,20 @@
 *
 	box-sizing: border-box
-
-	&:hover, &:focus, &:active
-		transition: .15s
+	
+body, html, #root
+	height: 100%
+	
+#root
+	display: flex
+	flex-flow: column
 		
 html
 	font-size: 18px
 		
 body
-	font-family: 'Roboto', sans-serif
+	min-width: 320px
+	font:
+		family: 'Roboto', sans-serif
+		weight: 400
 	line-height: 1.5
-	color: var(--body-font-color)
+	color: var(--common-color)
