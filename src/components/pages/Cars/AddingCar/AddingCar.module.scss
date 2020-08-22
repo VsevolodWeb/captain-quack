@@ -1,0 +1,36 @@
+.form {
+  display: grid;
+  grid-template-areas: 'name   year  price'
+                       'text   text   text'
+                       'color status button';
+
+  &__item {
+    &_name {
+      grid-area: name;
+    }
+
+    &_year {
+      grid-area: year;
+    }
+
+    &_price {
+      grid-area: price;
+    }
+
+    &_text {
+      grid-area: text;
+    }
+
+    &_color {
+      grid-area: color;
+    }
+
+    &_status {
+      grid-area: status;
+    }
+
+    &_button {
+      grid-area: button;
+    }
+  }
+}
